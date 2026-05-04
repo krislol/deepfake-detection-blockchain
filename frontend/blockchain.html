@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blockchain Explorer — Deepfake Detection</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="blockchain.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="logo-area">
+          <div>
+            <h1>Blockchain Explorer</h1>
+            <p class="tagline">Deepfake Detection System — file registration ledger</p>
+          </div>
+        </div>
+        <div class="sim-badge">SIMULATION MODE</div>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- Stats row -->
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+          <div class="stat-value" id="statBlocks">—</div>
+          <div class="stat-label">Total Blocks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statTx">—</div>
+          <div class="stat-label">Confirmed Txns</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statPending">—</div>
+          <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statUntilNext">—</div>
+          <div class="stat-label">Until Next Block</div>
+        </div>
+      </div>
+
+      <!-- Pending transactions -->
+      <section id="pendingSection" class="card pending-card" hidden>
+        <h2 class="card-title">Pending Transactions</h2>
+        <p class="pending-note" id="pendingNote"></p>
+        <div id="pendingList"></div>
+      </section>
+
+      <!-- Chain blocks -->
+      <div id="chainContainer"></div>
+
+      <!-- Empty state -->
+      <section id="emptyState" class="card" hidden>
+        <p class="empty-msg">
+          No transactions yet. Register a file from the detection page to create
+          the first transaction.
+        </p>
+      </section>
+
+      <!-- Error state -->
+      <section id="errorState" class="card card--error" hidden>
+        <p class="empty-msg" style="color: var(--fake)" id="errorMsg"></p>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <a href="index.html" class="footer-back">Back to Detection</a>
+        &nbsp;·&nbsp;
+        COMP1682 Final Year Project &nbsp;·&nbsp;
+        Polygon (Simulation) &nbsp;·&nbsp;
+        <span id="refreshNote">auto-refresh every 15s</span>
+      </p>
+    </footer>
+
+  </div>
+
+  <script src="blockchain.js"></script>
+</body>
+</html>

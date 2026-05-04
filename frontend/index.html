@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepfake Detection System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- ── Header ─────────────────────────────────────────────── -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="logo-area">
+          <div>
+            <h1>Deepfake Detection System</h1>
+            <p class="tagline">AI-powered video authentication with blockchain verification</p>
+          </div>
+        </div>
+        <div class="api-badge" id="apiBadge" aria-live="polite">
+          <span class="badge-dot" id="badgeDot"></span>
+          <span id="apiStatus">Connecting…</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- ── Upload card ─────────────────────────────────────── -->
+      <section id="uploadSection" class="card" aria-label="Video upload">
+        <h2 class="card-title">Upload Video</h2>
+
+        <div class="upload-area" id="uploadArea" tabindex="0"
+             role="button" aria-label="Drag and drop video, or click to browse">
+          <p class="upload-primary">Drag &amp; drop your video here</p>
+          <p class="upload-secondary">or</p>
+          <button class="btn btn-outline" id="browseBtn" type="button">Choose File</button>
+          <input type="file" id="fileInput"
+                 accept=".mp4,.avi,.mov,.mkv,.flv,.wmv" hidden
+                 aria-label="Video file input">
+          <p class="upload-formats">Supported: MP4 · AVI · MOV · MKV · FLV · WMV &nbsp;|&nbsp; Max 500 MB</p>
+        </div>
+
+        <div class="selected-file" id="selectedFile" hidden>
+          <span class="file-name" id="fileName"></span>
+          <span class="file-size" id="fileSize"></span>
+          <button class="btn-icon" id="clearFileBtn" type="button"
+                  aria-label="Remove selected file">✕</button>
+        </div>
+
+        <div class="upload-actions">
+          <select id="aggregationSelect" class="select-input"
+                  aria-label="Aggregation method">
+            <option value="mean">Aggregation: Mean (recommended)</option>
+            <option value="max">Aggregation: Max</option>
+            <option value="median">Aggregation: Median</option>
+            <option value="weighted">Aggregation: Weighted</option>
+          </select>
+          <button class="btn btn-primary" id="analyseBtn" type="button" disabled>
+            Analyse Video
+          </button>
+        </div>
+      </section>
+
+      <!-- ── Loading card ────────────────────────────────────── -->
+      <section id="loadingSection" class="card" hidden aria-live="polite" aria-label="Processing">
+        <div class="loading-inner">
+          <div class="spinner" role="status">
+            <div class="spinner-ring"></div>
+          </div>
+          <h2>Analysing video…</h2>
+          <p class="loading-sub">Extracting frames · Detecting faces · Running classifier</p>
+          <div class="elapsed-bar">
+            <span class="elapsed-label">Elapsed:</span>
+            <span class="elapsed-time" id="elapsedTime">0s</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Results card ────────────────────────────────────── -->
+      <section id="resultsSection" class="card" hidden aria-label="Detection results">
+
+        <div class="result-verdict" id="resultVerdict">
+          <span class="verdict-label" id="verdictLabel"></span>
+        </div>
+
+        <div class="confidence-bar-wrap">
+          <div class="confidence-labels">
+            <span>REAL</span>
+            <span>FAKE</span>
+          </div>
+          <div class="confidence-track" role="progressbar"
+               aria-label="Fake probability"
+               aria-valuemin="0" aria-valuemax="100" id="confTrack">
+            <div class="confidence-fill" id="confidenceFill"></div>
+            <div class="confidence-thumb" id="confidenceThumb"></div>
+          </div>
+          <div class="confidence-pct" id="confidencePct"></div>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-item">
+            <span class="ri-label">Filename</span>
+            <span class="ri-value" id="riFilename"></span>
+          </div>
+          <div class="result-item">
+            <span class="ri-label">Frames analysed</span>
+            <span class="ri-value" id="riFrames"></span>
+          </div>
+          <div class="result-item">
+            <span class="ri-label">Faces detected</span>
+            <span class="ri-value" id="riFaces"></span>
+          </div>
+          <div class="result-item">
+            <span class="ri-label">Processing time</span>
+            <span class="ri-value" id="riTime"></span>
+          </div>
+          <div class="result-item result-item--full">
+            <span class="ri-label">SHA-256 hash
+              <button class="btn-copy" id="copyHashBtn" type="button"
+                      aria-label="Copy hash to clipboard">Copy</button>
+            </span>
+            <code class="ri-hash" id="riHash"></code>
+          </div>
+        </div>
+
+        <!-- Blockchain section -->
+        <div class="blockchain-section" id="blockchainSection">
+          <h3 class="bc-title">Blockchain Verification</h3>
+          <p class="bc-desc">Register this file's hash on the blockchain to prove it existed
+            in this exact state. Anyone can later verify the file hasn't been tampered with.</p>
+          <div class="bc-actions">
+            <button class="btn btn-outline" id="registerBtn" type="button">Register on Blockchain</button>
+            <button class="btn btn-ghost" id="verifyBtn" type="button">Verify Existing Hash</button>
+          </div>
+          <div class="bc-result" id="bcResult" hidden></div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary" id="newUploadBtn" type="button">
+            Analyse Another Video
+          </button>
+        </div>
+      </section>
+
+      <!-- ── Error card ──────────────────────────────────────── -->
+      <section id="errorSection" class="card card--error" hidden aria-live="assertive">
+        <div class="error-inner">
+          <p class="error-message" id="errorMessage"></p>
+          <button class="btn btn-primary" id="retryBtn" type="button">Try Again</button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ── Footer ─────────────────────────────────────────────── -->
+    <footer class="site-footer">
+      <p>
+        COMP1682 Final Year Project &nbsp;·&nbsp;
+        EfficientNet-B0 + Celeb-DF v2 &nbsp;·&nbsp;
+        Blockchain: Polygon (simulation)
+      </p>
+    </footer>
+
+  </div><!-- .container -->
+
+  <script src="script.js"></script>
+</body>
+</html>
